@@ -11,9 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import logging
+import random
 
 from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    if random.randint(1,4) > 2:
+      logging.error('about to crash!')
+      raise ValueError('Oh no, an invalid value')
+
+    logging.info('got request for root')
+    logging.warn('AHHHHH got request for root')
+    return HttpResponse("Hello, world, modified. You're at the polls index.")

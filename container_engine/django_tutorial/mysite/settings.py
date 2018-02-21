@@ -15,6 +15,31 @@
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+# Imports the Google Cloud client library
+import google.cloud.logging
+
+# Instantiates a client
+client = google.cloud.logging.Client()
+
+# Connects the logger to the root logging handler; by default this captures
+# all logs at INFO level and higher
+client.setup_logging()
+
+# Imports Python standard library logging
+import logging
+
+# Emits the data using the standard logging module
+logging.info('Logging configured properly')
+
+try:
+  import googleclouddebugger
+  googleclouddebugger.AttachDebugger(
+      module='Polls App',
+      version='1.0'
+  )
+except ImportError:
+  pass
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -110,7 +135,7 @@ USE_TZ = True
 
 # [START staticurl]
 STATIC_URL = '/static/'
-# STATIC_URL = 'https://storage.googleapis.com/<your-gcs-bucket>/static/'
+STATIC_URL = 'https://storage.googleapis.com/gke-python-2/static/'
 # [END staticurl]
 
 STATIC_ROOT = 'static/'
