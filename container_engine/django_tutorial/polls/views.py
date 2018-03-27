@@ -12,33 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import random
-
 import logging
-import logging.handlers
-import google.cloud.logging as gcp_logging
 
-from google.oauth2 import service_account
 from django.http import HttpResponse
 
-cred = service_account.Credentials.from_service_account_file('./logging-key.json')
-gcp_logging_client = gcp_logging.Client(project='gke-python-2', credentials=cred)
-handler = gcp_logging_client.get_default_handler()
-logger = logging.getLogger('myapp-logs')
-gcp_logger = gcp_logging_client.logger('sd-logs')
-
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+logger = logging.getLogger('asdf')
 
 def index(request):
     if random.randint(1,4) > 2:
       logger.error('about to crash!')
-      gcp_logger.log_text('stackdriver is about to crash', labels={'test': 'failure'})
       raise ValueError('Oh no, an invalid value')
 
     logger.info('it appears to be working')
-    gcp_logger.log_text('it appears to be working - sd', severity='INFO')
     logger.warn('yikes this is a warning')
-    gcp_logger.log_text('yikes this is a warning - sd', severity='WARNING')
     return HttpResponse("Hello, world, customized. You're at the polls index.")
